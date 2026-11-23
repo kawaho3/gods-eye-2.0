@@ -223,6 +223,25 @@ test('GeoJSON preflight refuses missing or malformed feature geometry before dra
   );
 });
 
+test('oversized GeoJSON and KML files fail before any file bytes are read', async () => {
+  for (const name of ['oversized.geojson', 'oversized.kml']) {
+    let reads = 0;
+    const file = {
+      name,
+      size: 50 * 1024 * 1024 + 1,
+      arrayBuffer() {
+        reads += 1;
+        throw new Error('oversized file should never be read');
+      },
+    };
+    await assert.rejects(
+      loadGeoFile(file, { viewer: {} }),
+      /larger than 50 MiB/,
+    );
+    assert.equal(reads, 0, `${name} must not allocate a file buffer`);
+  }
+});
+
 test('KML tracks retain their explicit altitude and ground lines are tessellated', () => {
   const track = xmlEl('Track', {}, [
     xmlEl('altitudeMode', {}, 'absolute'),

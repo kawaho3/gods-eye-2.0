@@ -1850,11 +1850,16 @@ export class StyleManager extends ShellFacade {
   _initShareButton() {
     const store = useGlobeActionsStore(applicationPinia());
     if (this._shareToken) store.detach(this._shareToken);
-    this._shareToken = store.connect({ share: () => this._share() });
+    this._shareToken = store.connect({
+      share: () => this._share(),
+      // An explicit action for a fixed place link. This does not change
+      // what the existing Share control does for tracked entities.
+      shareStatic: () => this._share({ staticPlace: true }),
+    });
   }
 
-  /** Share or copy the current link, then say how it went. */
-  async _share() {
+  /** Share or copy a live/followed link, or an explicit fixed place link. */
+  async _share({ staticPlace = false } = {}) {
     if (this._disposed) return;
     const share = this.services.shareLink;
     let result;
@@ -1862,12 +1867,14 @@ export class StyleManager extends ShellFacade {
       // A host's hook may return a plain value or throw; both are answers.
       result = await Promise.resolve()
         .then(() => {
-          const href = this.shareLinkManager.buildLink();
+          const href = this.shareLinkManager.buildLink({ staticPlace });
           return href ? share(href) : false;
         })
         .catch(() => false);
     } else {
-      result = (await this.shareLinkManager.copyLink()) ? 'copied' : false;
+      result = (await this.shareLinkManager.copyLink({ staticPlace }))
+        ? 'copied'
+        : false;
     }
     if (this._disposed || result === 'cancelled') return;
     this._showToast(

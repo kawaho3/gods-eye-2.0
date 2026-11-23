@@ -188,14 +188,21 @@ test('GeoJSON preflight refuses missing or malformed feature geometry before dra
     over: '',
   });
 
-  for (const geometry of [undefined, false, 'Point', 0, []]) {
+  const malformedGeometries = [
+    undefined,
+    false,
+    'Point',
+    0,
+    [],
+    {},
+    { type: 'Feature', geometry: { type: 'Point', coordinates: [1, 2] } },
+    { type: 'FeatureCollection', features: [valid] },
+  ];
+  for (const geometry of malformedGeometries) {
     const bad = { type: 'Feature', properties: { name: 'Broken feature' } };
     if (geometry !== undefined) bad.geometry = geometry;
     const collection = { type: 'FeatureCollection', features: [valid, bad] };
-    assert.throws(
-      () => countGeoJsonGeometry(collection),
-      /invalid geometries/,
-    );
+    assert.throws(() => countGeoJsonGeometry(collection), /invalid geometries/);
     await assert.rejects(
       loadGeoFile(new File([JSON.stringify(collection)], 'mixed.geojson'), {
         viewer: {},
@@ -203,6 +210,17 @@ test('GeoJSON preflight refuses missing or malformed feature geometry before dra
       /invalid geometries/,
     );
   }
+  // Nested GeometryCollections are valid geometry objects, not Features.
+  assert.deepEqual(
+    countGeoJsonGeometry({
+      type: 'Feature',
+      geometry: {
+        type: 'GeometryCollection',
+        geometries: [{ type: 'Point', coordinates: [-122.4, 37.8] }],
+      },
+    }),
+    { features: 1, positions: 1, entities: 1, over: '' },
+  );
 });
 
 test('KML tracks retain their explicit altitude and ground lines are tessellated', () => {

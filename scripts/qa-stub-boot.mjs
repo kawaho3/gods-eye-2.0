@@ -8,6 +8,7 @@
  *   `vite-plugin-cesium` links into every page is reported, not failed);
  * - the credits show in the application's own line, and its list opens
  *   with the data credits;
+ * - a named view survives a page reload and restores the globe's camera;
  * - each data layer named below turns on, and off, without a page error or
  *   a console error (a feed's failed response is reported as the feed's,
  *   not failed: without network access or keys a feed answers with an
@@ -112,7 +113,7 @@ async function startViteServer(port) {
   const server = await createServer({
     root: ROOT,
     configFile: path.join(ROOT, 'vite.config.js'),
-    // No hot reload: the page is loaded once and nothing edits it.
+    // The gate drives a fixed checkout throughout the run.
     server: { port, strictPort: true, host: '127.0.0.1', hmr: false },
     logLevel: 'warn',
   });
@@ -151,6 +152,58 @@ async function main() {
   } finally {
     await server?.close();
   }
+}
+
+/** Save through Utilities, reload at another place, then restore the original camera. */
+async function checkSavedViewReload(page) {
+  const name = 'Coastal hills';
+  const saved = { lon: -122.25, lat: 37.5, height: 12000 };
+  const body = '#saved-views-body';
+  async function openViews() {
+    await page.evaluate(() => {
+      if (document.getElementById('utilities-panel').classList.contains('collapsed'))
+        document.querySelector('button[data-collapse-target="utilities-panel"]').click();
+      document.querySelector('button[aria-controls="saved-views-body"][aria-expanded="false"]')?.click();
+    });
+    await page.waitForSelector(`${body} form input`, { visible: true });
+  }
+
+  await openViews();
+  await page.evaluate((destination) => {
+    const camera = window.__stubBoot.renderers[0].camera;
+    camera.cancelFlight();
+    camera.setView({ destination, orientation: { heading: 0, pitch: -1.2, roll: 0 } });
+  }, saved);
+  await page.type(`${body} form input`, name);
+  await page.keyboard.press('Enter');
+  const hasName = (wanted) => document.querySelector('#saved-views-body li input')?.value === wanted;
+  await page.waitForFunction(hasName, {}, name);
+
+  // Start the new document at a different, explicit camera so startup cannot
+  // accidentally satisfy the check for the saved place.
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'load', timeout: 180_000 }),
+    page.evaluate(() => {
+      const url = new URL(location.href);
+      url.hash = 'v=2&lat=-32&lon=141&alt=12500&map=osm&l=';
+      history.replaceState(history.state, '', url);
+      location.reload();
+    }),
+  ]);
+  await page.waitForFunction(
+    () => Math.abs((window.__stubBoot?.renderers[0]?.camera.pose().lat ?? 90) + 32) < 0.001,
+    { timeout: 90_000 },
+  );
+  await openViews();
+  await page.waitForFunction(hasName, {}, name);
+  await page.$eval(`${body} button[aria-label="Fly to Coastal hills"]`, (button) => button.click());
+  await page.waitForFunction((expected) => {
+    const pose = window.__stubBoot.renderers[0].camera.pose();
+    return Math.abs(pose.lat - expected.lat) < 0.0002 &&
+      Math.abs(pose.lon - expected.lon) < 0.0002 && Math.abs(pose.height - expected.height) < 2;
+  }, { timeout: 60_000 }, saved);
+  await page.$eval(`${body} button[aria-label="Remove Coastal hills"]`, (button) => button.click());
+  await page.waitForFunction(() => !document.querySelector('#saved-views-body li'));
 }
 
 async function run(args) {
@@ -354,6 +407,9 @@ async function run(args) {
         }`,
       );
     }
+    await checkSavedViewReload(page);
+    report.savedViewReload = true;
+    console.log('saved views: restored the saved camera after a page reload');
     report.ok = true;
   } catch (error) {
     // Reported with the rest below, so the report and errors are kept.

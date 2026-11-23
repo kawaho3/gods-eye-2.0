@@ -33,13 +33,21 @@ test('the app root drops a share path and the hash, and keeps the query', () => 
   );
 });
 
-test('a share link sits under the app root without the sender ?lang', () => {
+test('share links stay under the app root without leaking sender query parameters', () => {
   assert.equal(
     shareLinkUrl('AQc', 'https://gev.example/?lang=ru#v=2&lat=1'),
     'https://gev.example/share/AQc',
   );
   assert.equal(
     shareLinkUrl('AQc', 'https://gev.example/gev/share/old?qa=1&lang=es'),
-    'https://gev.example/gev/share/AQc?qa=1',
+    'https://gev.example/gev/share/AQc',
+  );
+  assert.equal(
+    shareLinkUrl('AQc', 'https://gev.example/gev/index.html?apiKey=secret&token=private&workspace=123#lat=1'),
+    'https://gev.example/gev/share/AQc',
+  );
+  assert.equal(
+    shareLinkUrl('AQc', 'https://gev.example/?session=secret'),
+    'https://gev.example/share/AQc',
   );
 });

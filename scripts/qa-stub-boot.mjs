@@ -154,33 +154,55 @@ async function main() {
   }
 }
 
-/** Save through Utilities, reload at another place, then restore the original camera. */
+/** Save a camera in Utilities, reload elsewhere and return to it. */
 async function checkSavedViewReload(page) {
   const name = 'Coastal hills';
   const saved = { lon: -122.25, lat: 37.5, height: 12000 };
-  const body = '#saved-views-body';
+  const input = '#saved-views-body form input';
+  const row = '#saved-views-body li';
+  const restore = `${row} button[aria-label="Fly to ${name}"]`;
+  const remove = `${row} button[aria-label="Remove ${name}"]`;
+
   async function openViews() {
     await page.evaluate(() => {
-      if (document.getElementById('utilities-panel').classList.contains('collapsed'))
-        document.querySelector('button[data-collapse-target="utilities-panel"]').click();
-      document.querySelector('button[aria-controls="saved-views-body"][aria-expanded="false"]')?.click();
+      const panel = document.getElementById('utilities-panel');
+      if (panel.classList.contains('collapsed')) {
+        const toggle = 'button[data-collapse-target="utilities-panel"]';
+        document.querySelector(toggle).click();
+      }
+      const selector = '[aria-controls="saved-views-body"]';
+      const toggle = document.querySelector(selector);
+      if (toggle.getAttribute('aria-expanded') === 'false') toggle.click();
     });
-    await page.waitForSelector(`${body} form input`, { visible: true });
+    await page.waitForSelector(input, { visible: true });
   }
+
+  const hasName = (wanted) => {
+    const field = document.querySelector('#saved-views-body li input');
+    return field?.value === wanted;
+  };
+  const atPlace = (target) => {
+    const pose = window.__stubBoot?.renderers[0]?.camera.pose();
+    return (
+      pose &&
+      Math.abs(pose.lat - target.lat) < 0.0002 &&
+      Math.abs(pose.lon - target.lon) < 0.0002 &&
+      Math.abs(pose.height - target.height) < 2
+    );
+  };
 
   await openViews();
   await page.evaluate((destination) => {
     const camera = window.__stubBoot.renderers[0].camera;
     camera.cancelFlight();
-    camera.setView({ destination, orientation: { heading: 0, pitch: -1.2, roll: 0 } });
+    const orientation = { heading: 0, pitch: -1.2, roll: 0 };
+    camera.setView({ destination, orientation });
   }, saved);
-  await page.type(`${body} form input`, name);
+  await page.type(input, name);
   await page.keyboard.press('Enter');
-  const hasName = (wanted) => document.querySelector('#saved-views-body li input')?.value === wanted;
   await page.waitForFunction(hasName, {}, name);
 
-  // Start the new document at a different, explicit camera so startup cannot
-  // accidentally satisfy the check for the saved place.
+  // Start the new document elsewhere so startup cannot satisfy the restore.
   await Promise.all([
     page.waitForNavigation({ waitUntil: 'load', timeout: 180_000 }),
     page.evaluate(() => {
@@ -190,20 +212,14 @@ async function checkSavedViewReload(page) {
       location.reload();
     }),
   ]);
-  await page.waitForFunction(
-    () => Math.abs((window.__stubBoot?.renderers[0]?.camera.pose().lat ?? 90) + 32) < 0.001,
-    { timeout: 90_000 },
-  );
+  const away = { lon: 141, lat: -32, height: 12500 };
+  await page.waitForFunction(atPlace, { timeout: 90_000 }, away);
   await openViews();
   await page.waitForFunction(hasName, {}, name);
-  await page.$eval(`${body} button[aria-label="Fly to Coastal hills"]`, (button) => button.click());
-  await page.waitForFunction((expected) => {
-    const pose = window.__stubBoot.renderers[0].camera.pose();
-    return Math.abs(pose.lat - expected.lat) < 0.0002 &&
-      Math.abs(pose.lon - expected.lon) < 0.0002 && Math.abs(pose.height - expected.height) < 2;
-  }, { timeout: 60_000 }, saved);
-  await page.$eval(`${body} button[aria-label="Remove Coastal hills"]`, (button) => button.click());
-  await page.waitForFunction(() => !document.querySelector('#saved-views-body li'));
+  await page.$eval(restore, (button) => button.click());
+  await page.waitForFunction(atPlace, { timeout: 60_000 }, saved);
+  await page.$eval(remove, (button) => button.click());
+  await page.waitForSelector(row, { hidden: true });
 }
 
 async function run(args) {

@@ -679,11 +679,12 @@ export class ShareLinkManager {
   }
 
   /**
-   * The share link for the current state, `<app>/share/<code>`, stamped with
-   * its creation time, or null before the camera has a position. While the
-   * camera follows an entity, the link follows it too.
+   * Build a share link for the current state. The default follows a selected
+   * entity, as before. `staticPlace` deliberately captures only the current
+   * camera and shareable settings, even while the live camera is following.
+   * Private/local Data Library selections are not part of this place link.
    */
-  buildLink({ nowMs = Date.now() } = {}) {
+  buildLink({ nowMs = Date.now(), staticPlace = false } = {}) {
     const params = this._buildHashParams();
     if (!params) return null;
     // The long form is the one description of the live state; the code is
@@ -694,33 +695,48 @@ export class ShareLinkManager {
     state.worldTime = this._worldClock.isLive()
       ? null
       : Math.floor(this._worldClock.now() / 1000) * 1000;
-    let subject = null;
-    try {
-      subject = this._followSubjectProvider?.({ nowMs }) ?? null;
-    } catch {
-      subject = null;
-    }
-    if (subject) {
-      state.view = {
-        kind: 'thing',
-        entity: { kind: subject.kind, id: subject.id },
-        offset: subject.offset ?? null,
-        lastKnown: subject.lastKnown ?? null,
-      };
+    if (staticPlace) {
+      // fromLegacyShareState already strips any tracking selection from the
+      // serialized layer options. Force a place after normalization so that
+      // no followed entity, offset or last-known fix survives the snapshot.
+      state.view = { kind: 'place' };
+      // Local Data Library entries can contain private records that are not
+      // portable. Explicit static links share only the public layer state.
+      state.library = [];
+    } else {
+      let subject = null;
+      try {
+        subject = this._followSubjectProvider?.({ nowMs }) ?? null;
+      } catch {
+        subject = null;
+      }
+      if (subject) {
+        state.view = {
+          kind: 'thing',
+          entity: { kind: subject.kind, id: subject.id },
+          offset: subject.offset ?? null,
+          lastKnown: subject.lastKnown ?? null,
+        };
+      }
     }
     return shareLinkUrl(encodeShareView(state), window.location.href);
   }
 
   /** Copy a current-state snapshot with a copy-time timestamp. Returns true on success. */
-  async copyLink({ nowMs = Date.now() } = {}) {
+  async copyLink({ nowMs = Date.now(), staticPlace = false } = {}) {
     try {
-      const href = this.buildLink({ nowMs });
+      const href = this.buildLink({ nowMs, staticPlace });
       if (!href) return false;
       await navigator.clipboard.writeText(href);
       return true;
     } catch {
       return false;
     }
+  }
+
+  /** Copy a fixed place snapshot, never a tracked-entity link. */
+  async copyStaticLink({ nowMs = Date.now() } = {}) {
+    return this.copyLink({ nowMs, staticPlace: true });
   }
 
   /**

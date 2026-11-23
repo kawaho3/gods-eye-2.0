@@ -2,9 +2,9 @@
 
 # 🌐 God's Eye View
 
-**Official site: [godseyeview.ai](https://godseyeview.ai)** · [Download](https://godseyeview.ai/download/) · [Guide](https://godseyeview.ai/guide/) · [Releases](https://godseyeview.ai/releases/) · [Hosted version waitlist](https://godseyeview.ai/online/) · [Media](https://godseyeview.ai/press/)
+**Upstream official site: [godseyeview.ai](https://godseyeview.ai)** · [Download](https://godseyeview.ai/download/) · [Guide](https://godseyeview.ai/guide/) · [Releases](https://godseyeview.ai/releases/) · [Hosted version waitlist](https://godseyeview.ai/online/) · [Media](https://godseyeview.ai/press/)
 
-[![CI](https://github.com/bilawalsidhu/gods-eye-view/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/bilawalsidhu/gods-eye-view/actions/workflows/ci.yml) [![Reached #1 on GitHub Trending](https://img.shields.io/badge/%231_GitHub_Trending-thank_you!-F0A63C?style=flat-square&logo=github)](https://www.star-history.com/?type=date&repos=bilawalsidhu%2Fgods-eye-view) [![GitHub stars](https://img.shields.io/github/stars/bilawalsidhu/gods-eye-view?style=flat-square&color=4fe3ff)](https://github.com/bilawalsidhu/gods-eye-view/stargazers) [![MIT License](https://img.shields.io/badge/license-MIT-4fe3ff?style=flat-square)](LICENSE)
+[![CI](https://github.com/kawaho3/gods-eye-2.0/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kawaho3/gods-eye-2.0/actions/workflows/ci.yml) [![Reached #1 on GitHub Trending](https://img.shields.io/badge/%231_GitHub_Trending-thank_you!-F0A63C?style=flat-square&logo=github)](https://www.star-history.com/?type=date&repos=bilawalsidhu%2Fgods-eye-view) [![GitHub stars](https://img.shields.io/github/stars/bilawalsidhu/gods-eye-view?style=flat-square&color=4fe3ff)](https://github.com/bilawalsidhu/gods-eye-view/stargazers) [![MIT License](https://img.shields.io/badge/license-MIT-4fe3ff?style=flat-square)](LICENSE)
 
 ### A spy-satellite simulator in your browser. Except the data is real.
 
@@ -14,7 +14,7 @@ _The window through which we see our world._
 
 Click any satellite, plane, ship or public camera and you can track it. Turn on FLIR mode and suddenly you're wondering, holy crap, is this real? And it's free, and open source.
 
-**[One-click install with Pinokio](https://pinokio.co/apps/github-com-bilawalsidhu-gods-eye-view)** · **[Run it from the terminal](#-quick-start)** · **[Hosted version waitlist](https://godseyeview.ai/online/)**
+**[Run it from the terminal](#-quick-start)** · **[Hosted version waitlist](https://godseyeview.ai/online/)**
 
 God’s Eye View™ is a trademark of Metaversity LLC, used under license by Halfpixel, Inc. [Official download page](https://godseyeview.ai/download/).
 
@@ -133,7 +133,11 @@ app's **POWER UP** panel; [Keys & Costs](#-api-keys) explains the options.
 > public OpenStreetMap Overpass servers, which now refuse them, so Traffic,
 > Mapped Installations and ALPR stay empty until you update.
 
-### Path 1 — One click, no terminal
+Use the terminal or Docker steps below to install this repository.
+
+### Upstream Pinokio listing
+
+The public Pinokio listing installs the original God’s Eye View repository.
 
 1. Install or update [Pinokio](https://desktop.pinokio.co/) to **8.2 or later**.
 2. Open [God's Eye View in Pinokio](https://pinokio.co/apps/github-com-bilawalsidhu-gods-eye-view).
@@ -157,15 +161,15 @@ away when the same running server was opened in an external browser ([#365](http
 That points to the embedded browser rather than the app server or your
 hardware; it does not establish a minimum GPU requirement.
 
-### Path 2 — Terminal / coding agent
+### Terminal / coding agent
 
 Use **Node.js 24.x (24.14.0 or later) or 26.x**; 24.22.1 or later (26.12.1 or
 later on 26) includes the October 21, 2026 security fixes, among them
 CVE-2026-111497. The setup doctor warns about Node 25, which is end-of-life.
 
 ```bash
-git clone https://github.com/bilawalsidhu/gods-eye-view.git
-cd gods-eye-view
+git clone https://github.com/kawaho3/gods-eye-2.0.git
+cd gods-eye-2.0
 npm ci
 npm run doctor
 npm run dev
@@ -187,13 +191,13 @@ See [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
 configured keys straight from the Keychain. It starts keyless too.
 
 <details>
-<summary><b>Path 3 — Docker</b></summary>
+<summary><b>Docker</b></summary>
 
 No Node install needed; the container publishes the same dev server.
 
 ```bash
-git clone https://github.com/bilawalsidhu/gods-eye-view.git
-cd gods-eye-view
+git clone https://github.com/kawaho3/gods-eye-2.0.git
+cd gods-eye-2.0
 docker compose up
 ```
 
@@ -234,8 +238,8 @@ On a NAS, clone onto the share you want the data on and use the share owner's id
 
 ```bash
 cd /volume1/docker
-git clone https://github.com/bilawalsidhu/gods-eye-view.git
-cd gods-eye-view
+git clone https://github.com/kawaho3/gods-eye-2.0.git
+cd gods-eye-2.0
 env UID=1026 GID=100 docker compose up -d
 ```
 

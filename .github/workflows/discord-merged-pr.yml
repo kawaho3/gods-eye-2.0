@@ -8,12 +8,13 @@ permissions: {}
 
 jobs:
   announce:
-    if: github.repository == 'bilawalsidhu/gods-eye-view' && github.event.pull_request.merged == true
+    if: github.repository == 'kawaho3/gods-eye-2.0' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
       # This uses the trusted base workflow and never checks out or runs PR code.
       - name: Post to Discord contributions
+        if: env.DISCORD_WEBHOOK_URL != ''
         shell: bash
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_CONTRIBUTIONS_WEBHOOK_URL }}

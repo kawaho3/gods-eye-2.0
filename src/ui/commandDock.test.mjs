@@ -18,6 +18,7 @@ import { NavigationController } from './navigationController.js';
 import { MOBILE_TABS, initMobileShell } from './mobileShell.js';
 import CommandDockView from './views/CommandDockView.vue';
 import SceneChromeView from './views/SceneChromeView.vue';
+import VisualPresets from './views/panels/VisualPresets.vue';
 import { VisualSettings } from './visualSettings.js';
 
 function fixture(t) {
@@ -165,6 +166,34 @@ test('the map source row renders the published chips and selects through the con
   assert.equal($('#map-stack-status').textContent, '3D');
   assert.equal($('#map-stack-status').classList.contains('warn'), false);
   assert.equal(document.querySelectorAll('.map-stack-chip').length, 0);
+});
+
+test('both map source surfaces retain the fallback explanation until recovery', async (t) => {
+  document.body.replaceChildren();
+  const host = document.body.appendChild(document.createElement('div'));
+  const pinia = createPinia();
+  const app = createApp({
+    render: () => [h(CommandDockView), h(VisualPresets)],
+  }).use(pinia);
+  app.mount(host);
+  t.after(() => app.unmount());
+  const store = useDisplayStore(pinia);
+  const messages = () => [...host.querySelectorAll('.map-source-message')];
+  assert.equal(messages().length, 0);
+
+  const fallback = chipView('osm', { warn: true });
+  fallback.status.message = 'Esri Satellite tile requests failed; using OSM';
+  store.publishMapSource(fallback);
+  await nextTick();
+  assert.equal(messages().length, 2);
+  for (const message of messages()) {
+    assert.equal(message.textContent, fallback.status.message);
+    assert.equal(message.getAttribute('role'), 'status');
+  }
+
+  store.publishMapSource(chipView('esri-imagery', { text: 'SAT' }));
+  await nextTick();
+  assert.equal(messages().length, 0);
 });
 
 test('the ORBIT indicator sits on the body while offered and lights while orbiting', async (t) => {

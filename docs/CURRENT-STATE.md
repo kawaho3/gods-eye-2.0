@@ -3569,6 +3569,11 @@ cannot overwrite a newer selection. Refresh and destruction revoke old listeners
 and destruction suppresses late UI updates. Available choices and setup behavior
 remain unchanged.
 
+The command dock and Visual panel show the controller's error or fallback
+explanation below their source chips. An automatic Esri-to-OSM switch therefore
+keeps its reason visible after the toast expires. A successful selection or
+provider recovery clears the explanation with the controller's error state.
+
 ## Visual effects ownership
 
 VisualEffects keeps the records of the styles, their crossfades, bloom and

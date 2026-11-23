@@ -118,6 +118,7 @@ function selectMapSource(chip) {
           <span id="map-stack-status" class="pp-stack-status" v-class-toggle="{ warn: !!mapSource?.status.warn }" aria-live="polite">{{ mapSource ? mapSource.status.text : '3D' }}</span>
         </div>
         <div id="map-stack-chips" class="map-stack-chip-row" role="group" :aria-label="t('Map source')"><UiButton v-for="chip in mapSource?.chips" :key="chip.id" class="map-stack-chip" :pressed="Boolean(chip.active)" pressed-class="active" v-class-toggle="{ unavailable: !chip.available }" :data-stack-id="chip.id" :title="chip.title" :aria-disabled="String(!chip.available)" :aria-label="chip.ariaLabel" @click="selectMapSource(chip)"><span class="map-stack-chip-label">{{ chip.label }}</span><span v-if="chip.requirement" class="map-stack-chip-req">{{ chip.requirement }}</span></UiButton></div>
+        <p v-if="mapSource?.status.message" class="map-source-message" role="status">{{ t(mapSource.status.message) }}</p>
       </section>
       </div>
       <div id="style-mini-status" class="panel-mini-status" aria-live="polite">

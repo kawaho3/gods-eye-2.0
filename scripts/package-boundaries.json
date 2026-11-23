@@ -176,6 +176,8 @@
       "src/ui/views/panels/DisplayPanel.vue",
       "src/ui/views/panels/VisualPresets.vue",
       "src/ui/views/panels/GeoImport.vue",
+      "src/ui/views/panels/SavedViews.vue",
+      "src/ui/stores/savedViews.js",
       "src/ui/views/panels/DrawControls.vue",
       "src/ui/views/panels/DrawMarkList.vue",
       "src/ui/views/panels/DrawSwatches.vue",

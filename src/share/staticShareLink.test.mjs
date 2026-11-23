@@ -54,7 +54,7 @@ function readSharedView(href) {
   return decoded.state;
 }
 
-test('static share captures a place without following an aircraft or sharing library data', async (t) => {
+test('static share excludes followed aircraft and library data', async (t) => {
   const copied = installBrowserGlobals(
     t,
     'https://example.test/app/index.html?apiKey=secret&lang=fr&session=private',

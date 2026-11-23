@@ -26,7 +26,8 @@ function installBrowserGlobals(t, href) {
   t.after(() => {
     if (oldWindow) Object.defineProperty(globalThis, 'window', oldWindow);
     else delete globalThis.window;
-    if (oldNavigator) Object.defineProperty(globalThis, 'navigator', oldNavigator);
+    if (oldNavigator)
+      Object.defineProperty(globalThis, 'navigator', oldNavigator);
     else delete globalThis.navigator;
   });
   return clipboardWrites;
@@ -53,7 +54,7 @@ function readSharedView(href) {
   return decoded.state;
 }
 
-test('static share captures the place without an aircraft follow or local library data', async (t) => {
+test('static share captures a place without following an aircraft or sharing library data', async (t) => {
   const copied = installBrowserGlobals(
     t,
     'https://example.test/app/index.html?apiKey=secret&lang=fr&session=private',
@@ -91,7 +92,11 @@ test('static share captures the place without an aircraft follow or local librar
   assert.equal(place.alt, 1200);
   assert.equal(place.pitch, -30);
   assert.deepEqual(place.library, []);
-  assert.equal(followCalls, 1, 'static snapshot never queries followed entity');
+  assert.equal(
+    followCalls,
+    1,
+    'static snapshot never queries followed entity',
+  );
   assert.ok(!staticHref.includes('a1b2c3'));
   assert.equal(new URL(staticHref).search, '');
   assert.match(staticHref, /^https:\/\/example\.test\/app\/share\//);
@@ -104,7 +109,7 @@ test('static share captures the place without an aircraft follow or local librar
   assert.equal(readSharedView(copied.at(-1)).view.kind, 'thing');
 });
 
-test('a static share without tracking still restores the camera and style', (t) => {
+test('static share without tracking keeps camera and style', (t) => {
   installBrowserGlobals(t, 'https://example.test/gev/');
   const manager = new ShareLinkManager(
     {},

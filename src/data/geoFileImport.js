@@ -36,6 +36,15 @@ const GEOJSON_TYPES = new Set([
   'MultiPolygon',
   'GeometryCollection',
 ]);
+const GEOJSON_GEOMETRY_TYPES = new Set([
+  'Point',
+  'MultiPoint',
+  'LineString',
+  'MultiLineString',
+  'Polygon',
+  'MultiPolygon',
+  'GeometryCollection',
+]);
 const KMZ_IMAGE_TYPES = Object.freeze({
   png: 'image/png',
   jpg: 'image/jpeg',
@@ -180,7 +189,8 @@ export function countGeoJsonGeometry(
         node.geometry !== null &&
         (!node.geometry ||
           typeof node.geometry !== 'object' ||
-          Array.isArray(node.geometry))
+          Array.isArray(node.geometry) ||
+          !GEOJSON_GEOMETRY_TYPES.has(node.geometry.type))
       )
         throw new GeoImportError(msg('That GeoJSON has invalid geometries.'));
       if (node.geometry === null) {

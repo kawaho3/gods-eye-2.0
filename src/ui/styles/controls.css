@@ -887,6 +887,13 @@ html:not([lang='en']) .pp-slider-row > .pp-slider-mini-label {
   color: #ffb84d;
 }
 
+.map-source-message {
+  margin: 6px 0 0;
+  color: #ffb84d;
+  font: 11px/1.5 var(--font-sans);
+  overflow-wrap: anywhere;
+}
+
 .pp-select {
   flex: 1;
   min-width: 0;

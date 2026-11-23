@@ -37,6 +37,7 @@ export function createMapSourceControls({
             ? '...'
             : stack?.shortLabel || stack?.label || t('MAP'),
         warn: !!state.lastError,
+        message: state.lastError || '',
       },
     };
   }

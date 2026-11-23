@@ -168,6 +168,43 @@ test('real loader refuses empty files and malformed nested geometry before alloc
     );
 });
 
+test('GeoJSON preflight refuses missing or malformed feature geometry before drawing', async () => {
+  const valid = {
+    type: 'Feature',
+    properties: { name: 'Valid feature' },
+    geometry: { type: 'Point', coordinates: [1, 2] },
+  };
+  // An explicitly null geometry is allowed by GeoJSON; an omitted field,
+  // primitive, or array is not. Mix each bad entry with a drawable feature:
+  // an otherwise valid collection previously hid these invalid entries.
+  const validCollection = {
+    type: 'FeatureCollection',
+    features: [valid, { type: 'Feature', geometry: null }],
+  };
+  assert.deepEqual(countGeoJsonGeometry(validCollection), {
+    features: 2,
+    positions: 1,
+    entities: 2,
+    over: '',
+  });
+
+  for (const geometry of [undefined, false, 'Point', 0, []]) {
+    const bad = { type: 'Feature', properties: { name: 'Broken feature' } };
+    if (geometry !== undefined) bad.geometry = geometry;
+    const collection = { type: 'FeatureCollection', features: [valid, bad] };
+    assert.throws(
+      () => countGeoJsonGeometry(collection),
+      /invalid geometries/,
+    );
+    await assert.rejects(
+      loadGeoFile(new File([JSON.stringify(collection)], 'mixed.geojson'), {
+        viewer: {},
+      }),
+      /invalid geometries/,
+    );
+  }
+});
+
 test('KML tracks retain their explicit altitude and ground lines are tessellated', () => {
   const track = xmlEl('Track', {}, [
     xmlEl('altitudeMode', {}, 'absolute'),

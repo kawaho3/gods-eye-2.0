@@ -15,6 +15,7 @@ import StreetLevelPanel from './panels/StreetLevelPanel.vue';
 import StreetLevelPhotoViewer from './panels/StreetLevelPhotoViewer.vue';
 import DrawControls from './panels/DrawControls.vue';
 import GeoImport from './panels/GeoImport.vue';
+import SavedViews from './panels/SavedViews.vue';
 import UiSelect from '../kit/UiSelect.js';
 import LayerSectionIndex from './panels/LayerSectionIndex.vue';
 import LayerFinder from './panels/LayerFinder.vue';
@@ -64,7 +65,7 @@ async function importChosen(event) {
   <!-- Utilities: Directions (LayerPanel renders its row here), Draw, Import -->
   <RailPanel id="utilities-panel" start-collapsed :title="t('UTILITIES')" :hint="t('Directions, drawing and your own files')" scroll>
     <div id="utilities-toggles" class="data-toggle-list utilities-list"></div>
-    <div class="utilities-tools"><DrawControls /><GeoImport /></div>
+    <div class="utilities-tools"><DrawControls /><GeoImport /><SavedViews /></div>
   </RailPanel>
 
   <!-- CCTV Coverage Panel -->

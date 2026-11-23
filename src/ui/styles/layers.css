@@ -1389,3 +1389,35 @@ body.recording-mode #right-context-rail > [data-panel-id] {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+
+.saved-views-body {
+  display: grid;
+  gap: 6px;
+  margin: 4px 10px 6px;
+}
+
+.saved-views-body form,
+.saved-views-body li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.saved-views-body input {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-views-body ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.saved-views-body p {
+  margin: 0;
+  color: var(--text-secondary);
+  font: 12px/1.4 var(--font-sans);
+}

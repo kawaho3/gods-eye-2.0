@@ -869,6 +869,13 @@ panel that holds its row, and `set_panel_open` reaches it as
 `utilities-panel` or by "utilities", "draw", "drawing" or "import". On a phone
 it sits collapsed in the Layers sheet under Data Layers.
 
+In **Utilities → Saved views**, enter a name and choose **Save current view**.
+Each of the three slots keeps the camera position and orientation, map source,
+visual settings, and shareable layers in this browser. A saved view returns to
+the place where it was saved, including when the camera was following a moving
+object. Edit a row’s name to rename it, use its location button to restore it,
+or remove it to free a slot. The views survive reloads on the same origin.
+
 ## The Visual panel — November 14, 2026
 
 Visual (`#pp-toggles`, `src/ui/views/panels/DisplayPanel.vue`) is headed

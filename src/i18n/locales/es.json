@@ -4538,5 +4538,12 @@
   "JTWC warning ↗": "Aviso del JTWC ↗",
   "Active cyclone advisories and warnings": "Avisos activos de ciclones",
   "Select a storm on the map, or choose a storm in the list to select it and move the camera. Click empty map space to clear the selection. NOAA NHC/CPHC advisories and JTWC warnings. The NHC cone describes forecast center-track uncertainty, not storm size or the full hazard area. The JTWC 34-knot wind danger area is where 34-knot winds may reach, widened by forecast track error; it is not a cone. Forecast point labels are source lead hours, not times computed from advisory issuance. Geometry follows the surface; height is not weather altitude. Consult the official advisory or the regional warning centre.": "Selecciona una tormenta en el mapa o elige una en la lista para seleccionarla y mover la cámara. Haz clic en una zona vacía del mapa para quitar la selección. Avisos de NOAA NHC/CPHC y del JTWC. El cono del NHC describe la incertidumbre de la trayectoria prevista del centro, no el tamaño de la tormenta ni toda la zona de peligro. La zona de peligro de 34 nudos del JTWC es donde pueden llegar vientos de 34 nudos, ampliada por el error de la trayectoria prevista; no es un cono. Las etiquetas de los puntos de pronóstico son horas de anticipación de la fuente, no horas calculadas desde la emisión. La geometría sigue la superficie; la altura no es altitud meteorológica. Consulta el aviso oficial o el centro de avisos regional.",
-  "{name} · {classification} · Warning {number} · issued {time}": "{name} · {classification} · Aviso {number} · emitido {time}"
+  "{name} · {classification} · Warning {number} · issued {time}": "{name} · {classification} · Aviso {number} · emitido {time}",
+  "Saved views": "Vistas guardadas",
+  "View name": "Nombre de la vista",
+  "Save current view": "Guardar la vista actual",
+  "The globe view is unavailable. Try again.": "La vista del globo no está disponible. Vuelve a intentarlo.",
+  "Browser storage is unavailable. Check site permissions or free up space.": "El almacenamiento del navegador no está disponible. Revisa los permisos del sitio o libera espacio.",
+  "Delete a saved view to make room for another.": "Elimina una vista guardada para dejar espacio para otra.",
+  "Enter a view name.": "Introduce un nombre para la vista."
 }

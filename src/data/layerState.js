@@ -1033,8 +1033,19 @@ export function cloneLayerState(state) {
 }
 
 /** Append the compact v2 layer fields to an existing URLSearchParams object. */
-export function encodeLayerStateParams(params, state) {
+export function encodeLayerStateParams(
+  params,
+  state,
+  { includeTracking = true } = {},
+) {
   const normalized = normalizeLayerState(state);
+  if (!includeTracking) {
+    for (const { optionOwner, optionKey } of Object.values(
+      SHARE_TRACKING_RESTORE_POLICIES,
+    )) {
+      normalized.options[optionOwner][optionKey] = null;
+    }
+  }
   const enabled = new Set(normalized.enabledLayerIds);
   params.set(
     'l',

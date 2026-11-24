@@ -767,13 +767,13 @@ export class ShareLinkManager {
     history.replaceState(history.state, '', url.href);
   }
 
-  /** Capture the live share hash without changing the current history entry. */
-  snapshotHash() {
-    return this._buildHashParams()?.toString() ?? null;
+  /** Capture the live view without writing history. A saved place omits tracking. */
+  snapshotHash({ includeTracking = true } = {}) {
+    return this._buildHashParams({ includeTracking })?.toString() ?? null;
   }
 
   /** Build a deterministic snapshot without mutating history. */
-  _buildHashParams() {
+  _buildHashParams({ includeTracking = true } = {}) {
     if (this._destroyed) return null;
     const pose = this._camera.pose();
     if (!Number.isFinite(pose.lat) || !Number.isFinite(pose.lon)) return null;
@@ -814,7 +814,8 @@ export class ShareLinkManager {
     if (terminusPct != null) params.set('sce', String(terminusPct));
     params.set('map', this._mapStack);
     const layerState = this._layerStateProvider?.();
-    if (layerState) encodeLayerStateParams(params, layerState);
+    if (layerState)
+      encodeLayerStateParams(params, layerState, { includeTracking });
     this._libraryParamsEncoder?.(params);
     this._encodePanelStateParam(params, this._panelStateProvider?.());
     encodeStyleParamState(

@@ -1850,7 +1850,12 @@ export class StyleManager extends ShellFacade {
   _initShareButton() {
     const store = useGlobeActionsStore(applicationPinia());
     if (this._shareToken) store.detach(this._shareToken);
-    this._shareToken = store.connect({ share: () => this._share() });
+    this._shareToken = store.connect({
+      share: () => this._share(),
+      captureSavedView: () =>
+        this.shareLinkManager.snapshotHash({ includeTracking: false }),
+      restoreSavedView: (hash) => this.shareLinkManager.restore(hash),
+    });
   }
 
   /** Share or copy the current link, then say how it went. */

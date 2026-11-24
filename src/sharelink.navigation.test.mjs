@@ -141,6 +141,31 @@ test("the app's own hash writes never trigger a restore", (t) => {
   manager.destroy();
 });
 
+test('a saved place restores camera and layers without following a former selection', (t) => {
+  installTab(t, SHARE_A);
+  const manager = new ShareLinkManager(bindFakeCesiumCamera(fakeViewer()));
+  t.after(() => manager.destroy());
+  const layers = createDefaultLayerState();
+  layers.enabledLayerIds = ['flights', 'earthquakes'];
+  layers.options.flights.selectedFlightsTrackingId = 'abc123';
+  manager.setLayerStateProvider(() => layers);
+
+  const hash = manager.snapshotHash({ includeTracking: false });
+  assert.equal(window.location.hash, `#${SHARE_A}`);
+  const ordinary = decodeLayerStateParams(new URLSearchParams(manager.snapshotHash()));
+  assert.equal(ordinary.options.flights.selectedFlightsTrackingId, 'abc123');
+
+  let restored;
+  manager.watchNavigation((state) => { restored = state; });
+  assert.equal(manager.restore(hash), true);
+  assert.equal(restored.lat, 0);
+  assert.equal(restored.lon, 0);
+  assert.equal(restored.alt, 1000);
+  assert.ok(restored.layerState.enabledLayerIds.includes('earthquakes'));
+  assert.equal(restored.layerState.options.flights.selectedFlightsTrackingId, null);
+  assert.equal(layers.options.flights.selectedFlightsTrackingId, 'abc123');
+});
+
 test('restore applies a hash even when the address already shows it', (t) => {
   installTab(t, SHARE_A);
   const manager = new ShareLinkManager(bindFakeCesiumCamera(fakeViewer()));

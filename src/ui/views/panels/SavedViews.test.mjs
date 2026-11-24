@@ -91,10 +91,15 @@ test('blocked writes, missing camera and empty names leave storage consistent', 
   const next = mount(t);
   await save(next.host, 'Keep me');
   const { id } = next.store.views[0];
-  t.mock.method(Object.getPrototypeOf(window.localStorage), 'setItem', () => {
-    throw new Error('quota exceeded');
+  const storage = window.localStorage;
+  const key = storage.key(0);
+  const before = storage.getItem(key);
+  const write = t.mock.method(storage, 'setItem', () => {
+    throw new DOMException('Storage quota exceeded', 'QuotaExceededError');
   });
   assert.equal(await next.store.rename(id, 'Lost'), false);
+  assert.equal(write.mock.callCount(), 1);
   assert.match(next.store.notice, /Browser storage is unavailable/);
   assert.equal(next.store.views[0].name, 'Keep me');
+  assert.equal(storage.getItem(key), before);
 });

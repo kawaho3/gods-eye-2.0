@@ -5,6 +5,7 @@ import { settleImportedDrawing } from './geoImportPins.js';
 import {
   GeoImportError,
   MAX_IMPORT_ENTITIES,
+  MAX_IMPORT_BYTES,
   boundedImport,
   importFeatureName,
 } from './geoImportShared.js';
@@ -12,8 +13,6 @@ import { msg } from '../i18n/marker.js';
 
 export { GeoImportError, MAX_IMPORT_ENTITIES, importFeatureName };
 
-/** Largest file accepted, in bytes. */
-const MAX_IMPORT_BYTES = 50 * 1024 * 1024;
 /** Largest total a KMZ may inflate to — a zip bomb stops here. */
 const MAX_KMZ_INFLATED_BYTES = 120 * 1024 * 1024;
 /** Most files on the globe at once. */
@@ -28,6 +27,15 @@ export const GEO_FILE_ACCEPT = '.geojson,.json,.kml,.kmz,.gpx';
 const GEOJSON_TYPES = new Set([
   'FeatureCollection',
   'Feature',
+  'Point',
+  'MultiPoint',
+  'LineString',
+  'MultiLineString',
+  'Polygon',
+  'MultiPolygon',
+  'GeometryCollection',
+]);
+const GEOJSON_GEOMETRY_TYPES = new Set([
   'Point',
   'MultiPoint',
   'LineString',
@@ -172,7 +180,19 @@ export function countGeoJsonGeometry(
     if (node.type === 'Feature') {
       features += 1;
       if (features > maxFeatures) return result('features');
-      if (node.geometry == null) {
+      // GeoJSON permits a deliberately null geometry, not a missing or
+      // malformed one. Previously undefined and primitive geometry values
+      // passed the preflight and could be silently omitted from a valid
+      // collection or fail later with an unhelpful generic load error.
+      if (
+        node.geometry !== null &&
+        (!node.geometry ||
+          typeof node.geometry !== 'object' ||
+          Array.isArray(node.geometry) ||
+          !GEOJSON_GEOMETRY_TYPES.has(node.geometry.type))
+      )
+        throw new GeoImportError(msg('That GeoJSON has invalid geometries.'));
+      if (node.geometry === null) {
         entities += 1;
         if (entities > maxEntities) return result('entities');
       }

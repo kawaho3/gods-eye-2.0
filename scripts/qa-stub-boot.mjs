@@ -8,6 +8,8 @@
  *   `vite-plugin-cesium` links into every page is reported, not failed);
  * - the credits show in the application's own line, and its list opens
  *   with the data credits;
+ * - three views survive a fourth save attempt and a page reload, a saved
+ *   camera can be restored, and deleting a view frees its slot;
  * - each data layer named below turns on, and off, without a page error or
  *   a console error (a feed's failed response is reported as the feed's,
  *   not failed: without network access or keys a feed answers with an
@@ -29,6 +31,7 @@
  *   npm run qa:stub-boot [-- --url http://127.0.0.1:5280] [--strict]
  *     [--settle-ms 20000] [--json path] [--all-capabilities]
  */
+import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -112,7 +115,7 @@ async function startViteServer(port) {
   const server = await createServer({
     root: ROOT,
     configFile: path.join(ROOT, 'vite.config.js'),
-    // No hot reload: the page is loaded once and nothing edits it.
+    // The gate drives a fixed checkout throughout the run.
     server: { port, strictPort: true, host: '127.0.0.1', hmr: false },
     logLevel: 'warn',
   });
@@ -151,6 +154,102 @@ async function main() {
   } finally {
     await server?.close();
   }
+}
+
+/** Exercise the three slots and restore a saved camera after a full reload. */
+async function checkSavedViews(page) {
+  const name = 'Coastal hills';
+  const otherViews = ['River valley', 'Lake shore'];
+  const fourth = 'City park';
+  const saved = { lon: -122.25, lat: 37.5, height: 12000 };
+  const input = '#saved-views-body form input';
+  const row = '#saved-views-body li';
+  const restore = (label) => `${row} button[aria-label="Fly to ${label}"]`;
+  const remove = `${row} button[aria-label="Remove ${name}"]`;
+
+  async function openViews() {
+    await page.evaluate(() => {
+      const panel = document.getElementById('utilities-panel');
+      if (panel.classList.contains('collapsed')) {
+        const toggle = 'button[data-collapse-target="utilities-panel"]';
+        document.querySelector(toggle).click();
+      }
+      const selector = '[aria-controls="saved-views-body"]';
+      const toggle = document.querySelector(selector);
+      if (toggle.getAttribute('aria-expanded') === 'false') toggle.click();
+    });
+    await page.waitForSelector(input, { visible: true });
+  }
+
+  async function submit(label) {
+    await page.type(input, label);
+    await page.keyboard.press('Enter');
+  }
+
+  async function expectViews(expected) {
+    const actual = await page.$$eval(`${row} input`, (fields) =>
+      fields.map((field) => field.value),
+    );
+    assert.deepEqual(actual.sort(), expected.toSorted());
+  }
+
+  const atPlace = (target) => {
+    const pose = window.__stubBoot?.renderers[0]?.camera.pose();
+    return (
+      pose &&
+      Math.abs(pose.lat - target.lat) < 0.0002 &&
+      Math.abs(pose.lon - target.lon) < 0.0002 &&
+      Math.abs(pose.height - target.height) < 2
+    );
+  };
+
+  await openViews();
+  await page.evaluate((destination) => {
+    const camera = window.__stubBoot.renderers[0].camera;
+    camera.cancelFlight();
+    const orientation = { heading: 0, pitch: -1.2, roll: 0 };
+    camera.setView({ destination, orientation });
+  }, saved);
+  const original = [name, ...otherViews];
+  for (const label of original) {
+    await submit(label);
+    await page.waitForSelector(restore(label));
+  }
+  await submit(fourth);
+  const notice = await page.waitForSelector(
+    '#saved-views-body [role="status"]',
+    {
+      visible: true,
+    },
+  );
+  assert.match(
+    await notice.evaluate((el) => el.textContent),
+    /Delete a saved view/,
+  );
+  await expectViews(original);
+
+  // Start the new document elsewhere so startup cannot satisfy the restore.
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'load', timeout: 180_000 }),
+    page.evaluate(() => {
+      const url = new URL(location.href);
+      url.hash = 'v=2&lat=-32&lon=141&alt=12500&map=osm&l=';
+      history.replaceState(history.state, '', url);
+      location.reload();
+    }),
+  ]);
+  const away = { lon: 141, lat: -32, height: 12500 };
+  await page.waitForFunction(atPlace, { timeout: 90_000 }, away);
+  await openViews();
+  await page.waitForSelector(restore(name));
+  await expectViews(original);
+  await page.$eval(restore(name), (button) => button.click());
+  await page.waitForFunction(atPlace, { timeout: 60_000 }, saved);
+  await page.$eval(remove, (button) => button.click());
+  await page.waitForSelector(restore(name), { hidden: true });
+  await submit(fourth);
+  await page.waitForSelector(restore(fourth));
+  await expectViews([...otherViews, fourth]);
 }
 
 async function run(args) {
@@ -354,6 +453,12 @@ async function run(args) {
         }`,
       );
     }
+    await checkSavedViews(page);
+    report.savedViewReload = true;
+    report.savedViewLimit = true;
+    console.log(
+      'Saved views survived a fourth save and reload. Restored the camera and reused a freed slot.',
+    );
     report.ok = true;
   } catch (error) {
     // Reported with the rest below, so the report and errors are kept.

@@ -99,5 +99,6 @@ function selectMapSource(chip) {
         >{{ chip.label }}<small v-if="chip.requirement">{{ chip.requirement }}</small></UiButton
       >
     </div>
+    <p v-if="mapSource?.status.message" class="map-source-message" role="status">{{ t(mapSource.status.message) }}</p>
   </section>
 </template>

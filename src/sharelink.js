@@ -679,12 +679,16 @@ export class ShareLinkManager {
   }
 
   /**
-   * The share link for the current state, `<app>/share/<code>`, stamped with
-   * its creation time, or null before the camera has a position. While the
-   * camera follows an entity, the link follows it too.
+   * Build a share link for the current state. The default follows a selected
+   * entity, as before. `staticPlace` deliberately captures only the current
+   * camera and shareable settings, even while the live camera is following.
+   * Private/local Data Library selections are not part of this place link.
    */
-  buildLink({ nowMs = Date.now() } = {}) {
-    const params = this._buildHashParams();
+  buildLink({ nowMs = Date.now(), staticPlace = false } = {}) {
+    const params = this._buildHashParams({
+      includeTracking: !staticPlace,
+      includeLibrary: !staticPlace,
+    });
     if (!params) return null;
     // The long form is the one description of the live state; the code is
     // that state in the share format.
@@ -694,33 +698,40 @@ export class ShareLinkManager {
     state.worldTime = this._worldClock.isLive()
       ? null
       : Math.floor(this._worldClock.now() / 1000) * 1000;
-    let subject = null;
-    try {
-      subject = this._followSubjectProvider?.({ nowMs }) ?? null;
-    } catch {
-      subject = null;
-    }
-    if (subject) {
-      state.view = {
-        kind: 'thing',
-        entity: { kind: subject.kind, id: subject.id },
-        offset: subject.offset ?? null,
-        lastKnown: subject.lastKnown ?? null,
-      };
+    if (!staticPlace) {
+      let subject = null;
+      try {
+        subject = this._followSubjectProvider?.({ nowMs }) ?? null;
+      } catch {
+        subject = null;
+      }
+      if (subject) {
+        state.view = {
+          kind: 'thing',
+          entity: { kind: subject.kind, id: subject.id },
+          offset: subject.offset ?? null,
+          lastKnown: subject.lastKnown ?? null,
+        };
+      }
     }
     return shareLinkUrl(encodeShareView(state), window.location.href);
   }
 
   /** Copy a current-state snapshot with a copy-time timestamp. Returns true on success. */
-  async copyLink({ nowMs = Date.now() } = {}) {
+  async copyLink({ nowMs = Date.now(), staticPlace = false } = {}) {
     try {
-      const href = this.buildLink({ nowMs });
+      const href = this.buildLink({ nowMs, staticPlace });
       if (!href) return false;
       await navigator.clipboard.writeText(href);
       return true;
     } catch {
       return false;
     }
+  }
+
+  /** Copy a fixed place snapshot, never a tracked-entity link. */
+  async copyStaticLink({ nowMs = Date.now() } = {}) {
+    return this.copyLink({ nowMs, staticPlace: true });
   }
 
   /**
@@ -767,13 +778,13 @@ export class ShareLinkManager {
     history.replaceState(history.state, '', url.href);
   }
 
-  /** Capture the live share hash without changing the current history entry. */
-  snapshotHash() {
-    return this._buildHashParams()?.toString() ?? null;
+  /** Capture the live view without writing history. A saved place omits tracking. */
+  snapshotHash({ includeTracking = true } = {}) {
+    return this._buildHashParams({ includeTracking })?.toString() ?? null;
   }
 
   /** Build a deterministic snapshot without mutating history. */
-  _buildHashParams() {
+  _buildHashParams({ includeTracking = true, includeLibrary = true } = {}) {
     if (this._destroyed) return null;
     const pose = this._camera.pose();
     if (!Number.isFinite(pose.lat) || !Number.isFinite(pose.lon)) return null;
@@ -814,8 +825,9 @@ export class ShareLinkManager {
     if (terminusPct != null) params.set('sce', String(terminusPct));
     params.set('map', this._mapStack);
     const layerState = this._layerStateProvider?.();
-    if (layerState) encodeLayerStateParams(params, layerState);
-    this._libraryParamsEncoder?.(params);
+    if (layerState)
+      encodeLayerStateParams(params, layerState, { includeTracking });
+    if (includeLibrary) this._libraryParamsEncoder?.(params);
     this._encodePanelStateParam(params, this._panelStateProvider?.());
     encodeStyleParamState(
       params,

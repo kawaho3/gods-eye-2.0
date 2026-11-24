@@ -44,13 +44,16 @@ export function appRootUrl(href) {
 }
 
 /**
- * The share link for `code` on the app at `href`. The sender's `?lang` stays
- * behind: the recipient keeps their own language.
+ * The share link for `code` on the app at `href`.
+ * A share code contains its own allowlisted settings. Never propagate the
+ * sender's unrelated URL query: it could contain an API token, private
+ * workspace identifier, session key, or language preference.
  */
 export function shareLinkUrl(code, href) {
   const root = appRootUrl(href);
   const url = new URL(`${SHARE_PATH_SEGMENT}/${code}`, root);
-  url.search = root.search;
-  url.searchParams.delete('lang');
+  url.search = '';
+  url.username = '';
+  url.password = '';
   return url.href;
 }

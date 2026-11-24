@@ -248,25 +248,36 @@ export function initGeoFileImport({
    * @returns {Promise<Array<{name: string, ok: boolean, id?: string,
    *   removed?: number, error?: string}>>}
    */
-  function importFiles(files) {
+  function importFiles(files, replaceId = null) {
     const list = [...(files || [])];
     if (destroyed || !list.length) return Promise.resolve([]);
     // Capture the user's intent when the files are chosen, including time
     // spent waiting for an earlier batch. Later navigation must still win.
-    const generation = beginAutoFly();
-    const intent = ++cameraIntent;
-    const run = queue.then(() => importBatch(list, generation, intent));
+    const generation = replaceId === null ? beginAutoFly() : false;
+    const intent = replaceId === null ? ++cameraIntent : cameraIntent;
+    const run = queue.then(() =>
+      importBatch(list, generation, intent, replaceId),
+    );
     queue = run.catch(() => {});
     return run;
   }
 
-  async function importBatch(list, generation, intent) {
+  async function importBatch(list, generation, intent, replaceId) {
     const outcomes = [];
     if (destroyed || !list.length) return outcomes;
     for (const file of list) {
       if (destroyed) break;
       const fileName = String(file?.name || 'file');
-      if (imports.length >= MAX_IMPORTED_FILES) {
+      const previous = replaceId === null ? null : find(replaceId);
+      if (replaceId !== null && !previous) {
+        outcomes.push({
+          name: fileName,
+          ok: false,
+          error: t('That file could not be read.'),
+        });
+        continue;
+      }
+      if (!previous && imports.length >= MAX_IMPORTED_FILES) {
         outcomes.push({
           name: fileName,
           ok: false,
@@ -277,7 +288,7 @@ export function initGeoFileImport({
         continue;
       }
       setHint(t('Reading {name}…', { name: fileName }));
-      const color = COLORS[colorAt % COLORS.length];
+      const color = previous?.color ?? COLORS[colorAt % COLORS.length];
       let loaded;
       try {
         loaded = await load(file, { viewer, color, signal: lifetime.signal });
@@ -299,10 +310,7 @@ export function initGeoFileImport({
         loaded.revoke?.();
         break;
       }
-      try {
-        loaded.mount?.();
-      } catch {
-        // Something in it the renderer would not draw: refused whole.
+      if (previous && find(replaceId) !== previous) {
         loaded.revoke?.();
         outcomes.push({
           name: fileName,
@@ -311,22 +319,43 @@ export function initGeoFileImport({
         });
         continue;
       }
-      colorAt += 1;
-      seq += 1;
+      try {
+        loaded.mount?.();
+        if (previous && !previous.visible)
+          showImportedDrawing(loaded.drawing, false);
+      } catch {
+        // Undo any partially mounted drawing before releasing its resources.
+        removeImportedDrawing(loaded.drawing);
+        loaded.revoke?.();
+        outcomes.push({
+          name: fileName,
+          ok: false,
+          error: t('That file could not be read.'),
+        });
+        continue;
+      }
+      if (!previous) {
+        colorAt += 1;
+        seq += 1;
+      }
       const item = {
-        id: `import-${seq}`,
+        id: previous?.id ?? `import-${seq}`,
         name: loaded.name || fileName,
         format: loaded.format,
         ownStyles: loaded.format === 'kml' || loaded.format === 'kmz',
         entityCount: loaded.entityCount,
         removed: loaded.removed || 0,
         color,
-        visible: true,
+        visible: previous?.visible ?? true,
         drawing: loaded.drawing,
         revoke: loaded.revoke,
         refreshGround: loaded.refreshGround,
       };
-      imports.push(item);
+      if (previous) {
+        imports[imports.indexOf(previous)] = item;
+        removeImportedDrawing(previous.drawing);
+        previous.revoke?.();
+      } else imports.push(item);
       present();
       render();
       outcomes.push({
@@ -338,6 +367,7 @@ export function initGeoFileImport({
       // Fly to the first file of a batch that lands, so a drop shows its
       // result, unless something else took the camera meanwhile.
       if (
+        !previous &&
         outcomes.filter((o) => o.ok).length === 1 &&
         intent === cameraIntent &&
         autoFlyStillOwns(generation)
@@ -352,6 +382,7 @@ export function initGeoFileImport({
   // The view opens the picker; its pick and the row buttons call these.
   const disconnect = connect({
     importGeoFiles: (files) => void importFiles(files),
+    applyCsvLayer: (file, replaceId) => importFiles([file], replaceId),
     toggleGeoImport: (id) => setVisible(id, !find(id)?.visible),
     flyToGeoImport: flyTo,
     removeGeoImport: remove,

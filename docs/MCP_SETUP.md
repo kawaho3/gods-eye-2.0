@@ -12,7 +12,15 @@ npm run build:panel   # the in-conversation globe; rerun after app changes
 npm run dev           # http://localhost:4173, keep it running
 ```
 
-The MCP server reads from this app.
+The stdio process runs on the host from a native Git checkout. It can read the local HTTP app served by Vite dev, Vite preview or Docker on its published loopback port. Compose runs the HTTP app only. Install Node and the checkout dependencies on the host used by the MCP client.
+
+With the HTTP app running, verify the actual stdio connection from the checkout:
+
+```sh
+npm run mcp:check -- --api-base http://127.0.0.1:4173
+```
+
+The probe initializes a session, lists its tools and calls the read-only `get_bhote_koshi_flood` tool against a dataset bundled with the app. Success prints the number of tools and confirms the local request.
 
 ## 2. Add the server to a client
 

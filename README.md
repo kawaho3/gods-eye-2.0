@@ -209,7 +209,9 @@ Open **`http://localhost:4173`** as above. Everything the app saves stays in the
 
 Back up that folder and you've backed up everything; delete `.env` to forget your keys. Source edits still hot-reload. The port is published to `127.0.0.1` only, so the default matches the native one.
 
-The local MCP server and ChatGPT OAuth voice are not available under Docker; use an OpenAI API key for voice.
+Compose serves the HTTP app on the host’s loopback address. Run the MCP stdio process in a host checkout with Node; it can read that Docker-served app. Docker voice uses an OpenAI API key. See [MCP setup](docs/MCP_SETUP.md).
+
+To upgrade a Git install, stop the app, run `git pull --ff-only` and `npm ci`, then restart it. With Compose, pull the update and run `docker compose up -d --build --renew-anon-volumes` to refresh the image dependencies. Compose keeps your `.env`, `.gev-cache` and `.gev-logs` in the host checkout. Back up local data before upgrading. Browser-saved views belong to the same browser profile and origin.
 
 Publishing it wider is the [Sharing an instance](#-sharing-an-instance) opt-in, and it hands out **Provider Settings** too: the launcher trusts the container gateway as this machine, and a wider publish delivers everyone else from that same address. For an instance you mean to share, put the keys in `.env` by hand instead. [SECURITY.md](SECURITY.md) has the detail.
 

@@ -729,3 +729,39 @@ test('a refusal shows its counts in the languageâ€™s numerals, not the browserâ€
   );
   t.tool.destroy();
 });
+
+test('CSV refresh keeps the selected layer and its visibility through failed and successful replacements', async () => {
+  const t = setup();
+  const [first] = await t.tool.importFiles([file('original.geojson')]);
+  t.tool.setVisible(first.id, false);
+  const original = t.added[0];
+  const color = rows(t)[0].color;
+  const [failure] = await t.act(
+    'applyCsvLayer',
+    file('bad.geojson', { crash: true }),
+    first.id,
+  );
+  assert.equal(failure.ok, false);
+  assert.equal(t.removed.length, 0);
+  const [result] = await t.act(
+    'applyCsvLayer',
+    file('fresh.geojson'),
+    first.id,
+  );
+  assert.equal(result.id, first.id);
+  assert.equal(t.tool.list().length, 1);
+  assert.equal(t.tool.list()[0].visible, false);
+  assert.equal(t.tool.list()[0].name, 'fresh.geojson');
+  assert.equal(rows(t)[0].color, color);
+  assert.equal(t.removed[0].ds, original);
+  assert.equal(t.flights.length, 1);
+  t.tool.remove(first.id);
+  const [missing] = await t.act(
+    'applyCsvLayer',
+    file('gone.geojson'),
+    first.id,
+  );
+  assert.equal(missing.ok, false);
+  assert.equal(t.tool.list().length, 0);
+  t.tool.destroy();
+});

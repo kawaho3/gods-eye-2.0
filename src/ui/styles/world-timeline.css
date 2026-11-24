@@ -354,3 +354,10 @@ body.mobile-shell #world-timeline .world-timeline-speed {
   order: 2;
   height: 32px;
 }
+
+.world-timeline-source {
+  color: var(--text-primary);
+  font-size: 11px;
+  line-height: 1.1;
+  max-width: 7em;
+}

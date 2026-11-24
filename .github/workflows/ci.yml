@@ -183,7 +183,7 @@ jobs:
           docker build -t gev-keyless-ci .
           docker run --detach --name gev-keyless --publish 127.0.0.1:4173:4173 gev-keyless-ci
           trap 'docker logs --tail 25 gev-keyless; docker rm --force gev-keyless' EXIT
-          curl --fail --silent --show-error --retry 45 --retry-connrefused --retry-delay 2 --max-time 10 http://127.0.0.1:4173/ -o "$RUNNER_TEMP/gev-index.html"
+          curl --fail --silent --show-error --retry 45 --retry-all-errors --retry-max-time 90 --retry-delay 2 --max-time 10 http://127.0.0.1:4173/ -o "$RUNNER_TEMP/gev-index.html"
           grep -Fq '/src/main.js' "$RUNNER_TEMP/gev-index.html"
           curl --fail --silent --show-error http://127.0.0.1:4173/src/main.js -o /dev/null
           npm run mcp:check -- --api-base http://127.0.0.1:4173

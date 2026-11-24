@@ -4651,5 +4651,17 @@
   "The globe view is unavailable. Try again.": "Вид глобуса недоступен. Попробуйте ещё раз.",
   "Browser storage is unavailable. Check site permissions or free up space.": "Хранилище браузера недоступно. Проверьте разрешения сайта или освободите место.",
   "Delete a saved view to make room for another.": "Удалите один из сохранённых видов, чтобы освободить место для нового.",
-  "Enter a view name.": "Введите название вида."
+  "Enter a view name.": "Введите название вида.",
+  "Copy static place link": "Скопировать ссылку на место",
+  "Layer playback": "Воспроизведение слоёв",
+  "Earthquake alerts": "Оповещения о землетрясениях",
+  "Bounds (west, south, east, north)": "Границы (запад, юг, восток, север)",
+  "Minimum magnitude": "Минимальная магнитуда",
+  "Enable desktop alerts": "Включить уведомления на рабочем столе",
+  "Mute notifications": "Отключить уведомления",
+  "Stop": "Остановить",
+  "Check the bounds and minimum magnitude.": "Проверьте границы и минимальную магнитуду.",
+  "Desktop notifications are unavailable or blocked.": "Уведомления на рабочем столе недоступны или заблокированы.",
+  "Monitoring USGS while this tab is open.": "Данные USGS проверяются, пока эта вкладка открыта.",
+  "USGS unavailable. Retrying in one minute.": "USGS недоступна. Следующая попытка через минуту."
 }

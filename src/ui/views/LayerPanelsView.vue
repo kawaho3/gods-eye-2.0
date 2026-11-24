@@ -5,6 +5,7 @@ import UiButton from '../kit/UiButton.vue';
 import RailPanel from '../rail/RailPanel.vue';
 import { useSceneSharingStore } from '../stores/sceneSharing.js';
 import { useSceneStore } from '../stores/scenes.js';
+import { useGlobeActionsStore } from '../stores/globeActions.js';
 import { STORY_TAG_LIMIT, STORY_TAGS } from '../../scenes/storyTags.js';
 import { vClassToggle } from '../rail/classToggle.js';
 import SceneDialog from './panels/SceneDialog.vue';
@@ -15,6 +16,7 @@ import StreetLevelPanel from './panels/StreetLevelPanel.vue';
 import StreetLevelPhotoViewer from './panels/StreetLevelPhotoViewer.vue';
 import DrawControls from './panels/DrawControls.vue';
 import GeoImport from './panels/GeoImport.vue';
+import EarthquakeAlerts from './panels/EarthquakeAlerts.vue';
 import SavedViews from './panels/SavedViews.vue';
 import UiSelect from '../kit/UiSelect.js';
 import LayerSectionIndex from './panels/LayerSectionIndex.vue';
@@ -27,6 +29,7 @@ const { toolbar, dialog } = storeToRefs(useSceneSharingStore());
 // SceneControls presents the Scene panel's buttons, status and progress and
 // answers the buttons through the store.
 const scenes = useSceneStore();
+const globe = useGlobeActionsStore();
 const { panel: scene, currentScene } = storeToRefs(scenes);
 const off = (name) => scene.value?.disabled[name] ?? false;
 // The current scene's Stories tags; a chip not yet on is off at the limit.
@@ -65,6 +68,8 @@ async function importChosen(event) {
   <!-- Utilities: Directions (LayerPanel renders its row here), Draw, Import -->
   <RailPanel id="utilities-panel" start-collapsed :title="t('UTILITIES')" :hint="t('Directions, drawing and your own files')" scroll>
     <div id="utilities-toggles" class="data-toggle-list utilities-list"></div>
+    <EarthquakeAlerts />
+    <UiButton id="copy-static-place" variant="action" size="compact" @click="globe.act('shareStatic')">{{ t('Copy static place link') }}</UiButton>
     <div class="utilities-tools"><DrawControls /><GeoImport /><SavedViews /></div>
   </RailPanel>
 

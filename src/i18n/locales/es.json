@@ -4545,5 +4545,17 @@
   "The globe view is unavailable. Try again.": "La vista del globo no está disponible. Vuelve a intentarlo.",
   "Browser storage is unavailable. Check site permissions or free up space.": "El almacenamiento del navegador no está disponible. Revisa los permisos del sitio o libera espacio.",
   "Delete a saved view to make room for another.": "Elimina una vista guardada para dejar espacio para otra.",
-  "Enter a view name.": "Introduce un nombre para la vista."
+  "Enter a view name.": "Introduce un nombre para la vista.",
+  "Copy static place link": "Copiar enlace fijo al lugar",
+  "Layer playback": "Reproducción de capas",
+  "Earthquake alerts": "Alertas de terremotos",
+  "Bounds (west, south, east, north)": "Límites (oeste, sur, este, norte)",
+  "Minimum magnitude": "Magnitud mínima",
+  "Enable desktop alerts": "Activar alertas de escritorio",
+  "Mute notifications": "Silenciar notificaciones",
+  "Stop": "Detener",
+  "Check the bounds and minimum magnitude.": "Comprueba los límites y la magnitud mínima.",
+  "Desktop notifications are unavailable or blocked.": "Las notificaciones de escritorio no están disponibles o están bloqueadas.",
+  "Monitoring USGS while this tab is open.": "Se consulta el USGS mientras esta pestaña esté abierta.",
+  "USGS unavailable. Retrying in one minute.": "USGS no disponible. Se volverá a intentar en un minuto."
 }

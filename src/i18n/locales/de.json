@@ -4439,5 +4439,17 @@
   "The globe view is unavailable. Try again.": "Die Globusansicht ist nicht verfügbar. Versuche es erneut.",
   "Browser storage is unavailable. Check site permissions or free up space.": "Der Browserspeicher ist nicht verfügbar. Prüfe die Websiteberechtigungen oder gib Speicherplatz frei.",
   "Delete a saved view to make room for another.": "Lösche eine gespeicherte Ansicht, um Platz für eine weitere zu schaffen.",
-  "Enter a view name.": "Gib einen Namen für die Ansicht ein."
+  "Enter a view name.": "Gib einen Namen für die Ansicht ein.",
+  "Copy static place link": "Statischen Ortslink kopieren",
+  "Layer playback": "Ebenenwiedergabe",
+  "Earthquake alerts": "Erdbebenwarnungen",
+  "Bounds (west, south, east, north)": "Grenzen (West, Süd, Ost, Nord)",
+  "Minimum magnitude": "Mindestmagnitude",
+  "Enable desktop alerts": "Desktop-Benachrichtigungen aktivieren",
+  "Mute notifications": "Benachrichtigungen stummschalten",
+  "Stop": "Stoppen",
+  "Check the bounds and minimum magnitude.": "Grenzen und Mindestmagnitude prüfen.",
+  "Desktop notifications are unavailable or blocked.": "Desktop-Benachrichtigungen sind nicht verfügbar oder blockiert.",
+  "Monitoring USGS while this tab is open.": "USGS wird überwacht, solange dieser Tab geöffnet ist.",
+  "USGS unavailable. Retrying in one minute.": "USGS ist nicht erreichbar. Neuer Versuch in einer Minute."
 }

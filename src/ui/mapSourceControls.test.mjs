@@ -76,7 +76,7 @@ function fixture() {
 test('initial presentation uses actual state and retains unavailable chip semantics', () => {
   const f = fixture();
   assert.deepEqual(f.active(), ['osm']);
-  assert.deepEqual(f.view().status, { text: 'OSM', warn: false });
+  assert.deepEqual(f.view().status, { text: 'OSM', warn: false, message: '' });
   assert.deepEqual(
     f.view().chips.map((model) => model.id),
     ['bing-aerial', 'esri-imagery', 'osm'],
@@ -112,8 +112,16 @@ test('provider-driven fallback updates the active chip and durable state notific
   f.change('osm', 'Source unavailable; using OSM');
   f.emit();
   assert.deepEqual(f.active(), ['osm']);
-  assert.deepEqual(f.view().status, { text: 'OSM', warn: true });
+  assert.deepEqual(f.view().status, {
+    text: 'OSM',
+    warn: true,
+    message: 'Source unavailable; using OSM',
+  });
   assert.deepEqual(f.calls, [['state'], ['state']]);
+  f.change('esri-imagery');
+  f.emit();
+  assert.equal(f.view().status.message, '');
+  assert.equal(f.view().status.warn, false);
   f.controls.destroy();
 });
 

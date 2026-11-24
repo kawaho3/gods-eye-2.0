@@ -4545,5 +4545,17 @@
   "The globe view is unavailable. Try again.": "תצוגת הגלובוס אינה זמינה. נסו שוב.",
   "Browser storage is unavailable. Check site permissions or free up space.": "האחסון בדפדפן אינו זמין. בדקו את הרשאות האתר או פנו שטח אחסון.",
   "Delete a saved view to make room for another.": "מחקו תצוגה שמורה כדי לפנות מקום לתצוגה נוספת.",
-  "Enter a view name.": "הזינו שם לתצוגה."
+  "Enter a view name.": "הזינו שם לתצוגה.",
+  "Copy static place link": "העתקת קישור קבוע למקום",
+  "Layer playback": "הפעלת שכבות",
+  "Earthquake alerts": "התראות רעידות אדמה",
+  "Bounds (west, south, east, north)": "גבולות (מערב, דרום, מזרח, צפון)",
+  "Minimum magnitude": "מגניטודה מזערית",
+  "Enable desktop alerts": "הפעלת התראות שולחן עבודה",
+  "Mute notifications": "השתקת התראות",
+  "Stop": "עצירה",
+  "Check the bounds and minimum magnitude.": "יש לבדוק את הגבולות ואת המגניטודה המזערית.",
+  "Desktop notifications are unavailable or blocked.": "התראות שולחן העבודה אינן זמינות או חסומות.",
+  "Monitoring USGS while this tab is open.": "נתוני USGS נבדקים כל עוד הלשונית פתוחה.",
+  "USGS unavailable. Retrying in one minute.": "נתוני USGS אינם זמינים. ניסיון נוסף בעוד דקה."
 }

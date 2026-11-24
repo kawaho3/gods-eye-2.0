@@ -4333,5 +4333,17 @@
   "The globe view is unavailable. Try again.": "地球视图暂不可用。请重试。",
   "Browser storage is unavailable. Check site permissions or free up space.": "浏览器存储不可用。请检查站点权限或释放存储空间。",
   "Delete a saved view to make room for another.": "请先删除一个已保存的视图，再保存新的视图。",
-  "Enter a view name.": "请输入视图名称。"
+  "Enter a view name.": "请输入视图名称。",
+  "Copy static place link": "复制固定地点链接",
+  "Layer playback": "图层回放",
+  "Earthquake alerts": "地震提醒",
+  "Bounds (west, south, east, north)": "范围（西、南、东、北）",
+  "Minimum magnitude": "最低震级",
+  "Enable desktop alerts": "启用桌面提醒",
+  "Mute notifications": "静音通知",
+  "Stop": "停止",
+  "Check the bounds and minimum magnitude.": "请检查范围和最低震级。",
+  "Desktop notifications are unavailable or blocked.": "桌面通知不可用或已被阻止。",
+  "Monitoring USGS while this tab is open.": "此标签页打开期间将监测 USGS 数据。",
+  "USGS unavailable. Retrying in one minute.": "USGS 暂时不可用。一分钟后重试。"
 }

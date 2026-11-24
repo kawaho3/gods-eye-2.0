@@ -168,6 +168,80 @@ test('real loader refuses empty files and malformed nested geometry before alloc
     );
 });
 
+test('GeoJSON preflight refuses missing or malformed feature geometry before drawing', async () => {
+  const valid = {
+    type: 'Feature',
+    properties: { name: 'Valid feature' },
+    geometry: { type: 'Point', coordinates: [1, 2] },
+  };
+  // An explicitly null geometry is allowed by GeoJSON; an omitted field,
+  // primitive, or array is not. Mix each bad entry with a drawable feature:
+  // an otherwise valid collection previously hid these invalid entries.
+  const validCollection = {
+    type: 'FeatureCollection',
+    features: [valid, { type: 'Feature', geometry: null }],
+  };
+  assert.deepEqual(countGeoJsonGeometry(validCollection), {
+    features: 2,
+    positions: 1,
+    entities: 2,
+    over: '',
+  });
+
+  const malformedGeometries = [
+    undefined,
+    false,
+    'Point',
+    0,
+    [],
+    {},
+    { type: 'Feature', geometry: { type: 'Point', coordinates: [1, 2] } },
+    { type: 'FeatureCollection', features: [valid] },
+  ];
+  for (const geometry of malformedGeometries) {
+    const bad = { type: 'Feature', properties: { name: 'Broken feature' } };
+    if (geometry !== undefined) bad.geometry = geometry;
+    const collection = { type: 'FeatureCollection', features: [valid, bad] };
+    assert.throws(() => countGeoJsonGeometry(collection), /invalid geometries/);
+    await assert.rejects(
+      loadGeoFile(new File([JSON.stringify(collection)], 'mixed.geojson'), {
+        viewer: {},
+      }),
+      /invalid geometries/,
+    );
+  }
+  // Nested GeometryCollections are valid geometry objects, not Features.
+  assert.deepEqual(
+    countGeoJsonGeometry({
+      type: 'Feature',
+      geometry: {
+        type: 'GeometryCollection',
+        geometries: [{ type: 'Point', coordinates: [-122.4, 37.8] }],
+      },
+    }),
+    { features: 1, positions: 1, entities: 1, over: '' },
+  );
+});
+
+test('oversized GeoJSON and KML files fail before any file bytes are read', async () => {
+  for (const name of ['oversized.geojson', 'oversized.kml']) {
+    let reads = 0;
+    const file = {
+      name,
+      size: 50 * 1024 * 1024 + 1,
+      arrayBuffer() {
+        reads += 1;
+        throw new Error('oversized file should never be read');
+      },
+    };
+    await assert.rejects(
+      loadGeoFile(file, { viewer: {} }),
+      /larger than 50 MiB/,
+    );
+    assert.equal(reads, 0, `${name} must not allocate a file buffer`);
+  }
+});
+
 test('KML tracks retain their explicit altitude and ground lines are tessellated', () => {
   const track = xmlEl('Track', {}, [
     xmlEl('altitudeMode', {}, 'absolute'),

@@ -403,6 +403,7 @@ const onKey = (event) => {
   <div v-if="time.supported && time.span" id="world-timeline" role="group" :aria-label="t('World time')"
     ><UiButton class="world-timeline-play" :label="time.playing ? t('Pause') : t('Play')" @click="store.togglePlay()"
       ><UiIcon :name="time.playing ? 'pause' : 'play_arrow'" :size="20" /></UiButton
+    ><span v-if="!time.live" id="layer-playback-label" class="world-timeline-source">{{ t('Layer playback') }}</span
     ><UiSelect class="gev-field gev-field--compact world-timeline-speed" :aria-label="t('Play speed')" :title="t('Play speed')" :options="speeds" :model-value="speed" @update:model-value="store.setSpeed($event)"
     /><div class="world-timeline-track" :class="{ 'is-zoomed': zoomed }" :title="markTip?.hover ? undefined : t('Scroll or pinch to zoom, drag to move along · double-click to see it all')" @wheel="onWheel" @dblclick="showAll" @pointerdown="onPointerDown" @pointermove="onPointerMove" @pointerup="onPointerUp" @pointercancel="onPointerUp" @pointerleave="hovered = null"
       ><time class="world-timeline-time" :class="{ 'is-waiting': waiting }" :style="{ '--at': place(shown) / 100 }" :datetime="new Date(time.timeMs).toISOString()" aria-live="off"
@@ -416,6 +417,7 @@ const onKey = (event) => {
         type="range"
         :aria-label="t('World time')"
         :aria-valuetext="valueText"
+        :aria-describedby="time.live ? undefined : 'layer-playback-label'"
         :min="view.start"
         :max="view.end"
         step="any"

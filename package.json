@@ -32,6 +32,7 @@
     "visualization"
   ],
   "scripts": {
+    "quake-journal": "node scripts/quake-journal.mjs",
     "doctor": "node scripts/setup-doctor.mjs",
     "format": "node scripts/format.mjs --write",
     "format:check": "node scripts/format.mjs --check",
@@ -62,6 +63,7 @@
     "check:boundaries": "node scripts/check-import-directions.mjs && node scripts/check-package-boundaries.mjs",
     "qa:transit": "node scripts/qa-transit.mjs",
     "qa:data-library": "node scripts/qa-data-library.mjs",
+    "mcp:check": "node scripts/qa-local-mcp.mjs",
     "mcp": "node server/mcp/stdio.js"
   },
   "dependencies": {

@@ -4333,5 +4333,17 @@
   "The globe view is unavailable. Try again.": "地球儀のビューを利用できません。もう一度お試しください。",
   "Browser storage is unavailable. Check site permissions or free up space.": "ブラウザーのストレージを利用できません。サイトの権限を確認するか、空き容量を増やしてください。",
   "Delete a saved view to make room for another.": "新しいビューを保存するには、保存済みのビューを一つ削除してください。",
-  "Enter a view name.": "ビュー名を入力してください。"
+  "Enter a view name.": "ビュー名を入力してください。",
+  "Copy static place link": "場所の固定リンクをコピー",
+  "Layer playback": "レイヤー再生",
+  "Earthquake alerts": "地震通知",
+  "Bounds (west, south, east, north)": "範囲（西、南、東、北）",
+  "Minimum magnitude": "最小マグニチュード",
+  "Enable desktop alerts": "デスクトップ通知を有効化",
+  "Mute notifications": "通知をミュート",
+  "Stop": "停止",
+  "Check the bounds and minimum magnitude.": "範囲と最小マグニチュードを確認してください。",
+  "Desktop notifications are unavailable or blocked.": "デスクトップ通知は利用できないか、ブロックされています。",
+  "Monitoring USGS while this tab is open.": "このタブを開いている間、USGSの情報を確認します。",
+  "USGS unavailable. Retrying in one minute.": "USGSの情報を取得できません。1分後に再試行します。"
 }

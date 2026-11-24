@@ -4439,5 +4439,17 @@
   "The globe view is unavailable. Try again.": "Globvyn är inte tillgänglig. Försök igen.",
   "Browser storage is unavailable. Check site permissions or free up space.": "Webbläsarens lagring är inte tillgänglig. Kontrollera webbplatsens behörigheter eller frigör utrymme.",
   "Delete a saved view to make room for another.": "Ta bort en sparad vy för att ge plats åt en ny.",
-  "Enter a view name.": "Ange ett namn på vyn."
+  "Enter a view name.": "Ange ett namn på vyn.",
+  "Copy static place link": "Kopiera fast platslänk",
+  "Layer playback": "Lageruppspelning",
+  "Earthquake alerts": "Jordbävningsvarningar",
+  "Bounds (west, south, east, north)": "Gränser (väst, syd, öst, nord)",
+  "Minimum magnitude": "Minsta magnitud",
+  "Enable desktop alerts": "Aktivera skrivbordsaviseringar",
+  "Mute notifications": "Tysta aviseringar",
+  "Stop": "Stoppa",
+  "Check the bounds and minimum magnitude.": "Kontrollera gränserna och minsta magnitud.",
+  "Desktop notifications are unavailable or blocked.": "Skrivbordsaviseringar är otillgängliga eller blockerade.",
+  "Monitoring USGS while this tab is open.": "USGS bevakas så länge den här fliken är öppen.",
+  "USGS unavailable. Retrying in one minute.": "USGS är inte tillgängligt. Nytt försök om en minut."
 }

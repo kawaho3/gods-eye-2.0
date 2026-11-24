@@ -4,6 +4,7 @@
  * service.
  */
 
+import { pointInBounds } from '../geo/pointInBounds.js';
 import { ToolError } from './catalog.js';
 
 const EARTH_RADIUS_KM = 6371.0088;
@@ -207,14 +208,7 @@ export function areaCenter(area) {
 
 /** Whether a point lies inside a resolved area, including radius areas. */
 export function areaContains(area, point) {
-  if (!Number.isFinite(point?.lat) || !Number.isFinite(point?.lon))
-    return false;
-  if (point.lat < area.south || point.lat > area.north) return false;
-  const inLongitude =
-    area.west <= area.east
-      ? point.lon >= area.west && point.lon <= area.east
-      : point.lon >= area.west || point.lon <= area.east;
-  if (!inLongitude) return false;
+  if (!pointInBounds(area, point)) return false;
   return area.center
     ? distanceKm(area.center, point) <= area.center.radiusKm
     : true;

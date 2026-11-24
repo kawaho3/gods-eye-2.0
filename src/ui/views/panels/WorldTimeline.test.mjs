@@ -55,6 +55,7 @@ test('the timeline shows live, and plays, pauses and goes back', async (t) => {
   worldClock.seek(at);
   await nextTick();
   assert.ok(bar());
+  assert.equal(bar().querySelector('#layer-playback-label').textContent, 'Layer playback');
   const time = bar().querySelector('time');
   assert.equal(time.getAttribute('datetime'), new Date(at).toISOString());
   assert.match(time.textContent, /UTC$/);
@@ -74,6 +75,7 @@ test('the timeline shows live, and plays, pauses and goes back', async (t) => {
   await nextTick();
   assert.equal(worldClock.isLive(), true);
   assert.ok(bar(), 'still shown, live');
+  assert.equal(bar().querySelector('#layer-playback-label'), null);
   assert.equal(bar().querySelector('.world-timeline-live').disabled, true);
 });
 

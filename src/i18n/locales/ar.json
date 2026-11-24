@@ -4875,5 +4875,16 @@
   "Check the bounds and minimum magnitude.": "تحقق من الحدود وأدنى مقدار للزلزال.",
   "Desktop notifications are unavailable or blocked.": "إشعارات سطح المكتب غير متاحة أو محظورة.",
   "Monitoring USGS while this tab is open.": "تتم مراقبة بيانات USGS ما دامت علامة التبويب مفتوحة.",
-  "USGS unavailable. Retrying in one minute.": "بيانات USGS غير متاحة. ستتم إعادة المحاولة بعد دقيقة."
+  "USGS unavailable. Retrying in one minute.": "بيانات USGS غير متاحة. ستتم إعادة المحاولة بعد دقيقة.",
+  "Import local CSV": "استيراد ملف CSV محلي",
+  "Latitude column": "عمود خط العرض",
+  "Longitude column": "عمود خط الطول",
+  "Timestamp column (optional)": "عمود الوقت (اختياري)",
+  "ID column (optional)": "عمود المعرّف (اختياري)",
+  "Check the CSV header, size and row limit.": "تحقق من ترويسة ملف CSV وحجمه والحد الأقصى لعدد السجلات.",
+  "Choose distinct columns for each field.": "اختر عمودًا مختلفًا لكل حقل.",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "السجلات الصالحة: {valid}. السجلات غير الصالحة: {invalid}.",
+  "Rejected records: {rows}": "السجلات المرفوضة: {rows}",
+  "Create a new layer": "إنشاء طبقة جديدة",
+  "CSV layer updated.": "تم تحديث طبقة CSV."
 }

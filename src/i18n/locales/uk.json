@@ -4663,5 +4663,16 @@
   "Check the bounds and minimum magnitude.": "Перевірте межі та мінімальну магнітуду.",
   "Desktop notifications are unavailable or blocked.": "Сповіщення на робочому столі недоступні або заблоковані.",
   "Monitoring USGS while this tab is open.": "Дані USGS перевіряються, доки ця вкладка відкрита.",
-  "USGS unavailable. Retrying in one minute.": "USGS недоступна. Наступна спроба за хвилину."
+  "USGS unavailable. Retrying in one minute.": "USGS недоступна. Наступна спроба за хвилину.",
+  "Import local CSV": "Імпортувати локальний CSV",
+  "Latitude column": "Стовпець широти",
+  "Longitude column": "Стовпець довготи",
+  "Timestamp column (optional)": "Стовпець часу (необов’язково)",
+  "ID column (optional)": "Стовпець ідентифікатора (необов’язково)",
+  "Check the CSV header, size and row limit.": "Перевірте заголовок, розмір CSV та обмеження кількості рядків.",
+  "Choose distinct columns for each field.": "Виберіть окремий стовпець для кожного поля.",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "Дійсні рядки: {valid}. Недійсні рядки: {invalid}.",
+  "Rejected records: {rows}": "Відхилені записи: {rows}",
+  "Create a new layer": "Створити новий шар",
+  "CSV layer updated.": "Шар CSV оновлено."
 }

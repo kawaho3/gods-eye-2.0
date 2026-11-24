@@ -16,6 +16,7 @@ import StreetLevelPanel from './panels/StreetLevelPanel.vue';
 import StreetLevelPhotoViewer from './panels/StreetLevelPhotoViewer.vue';
 import DrawControls from './panels/DrawControls.vue';
 import GeoImport from './panels/GeoImport.vue';
+import CsvImport from './panels/CsvImport.vue';
 import EarthquakeAlerts from './panels/EarthquakeAlerts.vue';
 import SavedViews from './panels/SavedViews.vue';
 import UiSelect from '../kit/UiSelect.js';
@@ -69,6 +70,7 @@ async function importChosen(event) {
   <RailPanel id="utilities-panel" start-collapsed :title="t('UTILITIES')" :hint="t('Directions, drawing and your own files')" scroll>
     <div id="utilities-toggles" class="data-toggle-list utilities-list"></div>
     <EarthquakeAlerts />
+    <CsvImport />
     <UiButton id="copy-static-place" variant="action" size="compact" @click="globe.act('shareStatic')">{{ t('Copy static place link') }}</UiButton>
     <div class="utilities-tools"><DrawControls /><GeoImport /><SavedViews /></div>
   </RailPanel>

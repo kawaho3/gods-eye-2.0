@@ -4663,5 +4663,16 @@
   "Check the bounds and minimum magnitude.": "Проверьте границы и минимальную магнитуду.",
   "Desktop notifications are unavailable or blocked.": "Уведомления на рабочем столе недоступны или заблокированы.",
   "Monitoring USGS while this tab is open.": "Данные USGS проверяются, пока эта вкладка открыта.",
-  "USGS unavailable. Retrying in one minute.": "USGS недоступна. Следующая попытка через минуту."
+  "USGS unavailable. Retrying in one minute.": "USGS недоступна. Следующая попытка через минуту.",
+  "Import local CSV": "Импорт локального CSV",
+  "Latitude column": "Столбец широты",
+  "Longitude column": "Столбец долготы",
+  "Timestamp column (optional)": "Столбец времени (необязательно)",
+  "ID column (optional)": "Столбец идентификатора (необязательно)",
+  "Check the CSV header, size and row limit.": "Проверьте заголовок, размер CSV и ограничение числа строк.",
+  "Choose distinct columns for each field.": "Выберите отдельный столбец для каждого поля.",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "Допустимые строки: {valid}. Ошибочные строки: {invalid}.",
+  "Rejected records: {rows}": "Отклонённые записи: {rows}",
+  "Create a new layer": "Создать новый слой",
+  "CSV layer updated.": "Слой CSV обновлён."
 }

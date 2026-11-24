@@ -1,6 +1,8 @@
 /** What the file import's parsing and drawing parts share: its error, its limits, its deadline and feature names. */
 import { msg } from '../i18n/marker.js';
 
+/** Largest local import accepted, in bytes. */
+export const MAX_IMPORT_BYTES = 50 * 1024 * 1024;
 /** Most entities one file may create before it is refused. */
 export const MAX_IMPORT_ENTITIES = 20_000;
 /** Longest plain-text name kept from a file's features. */

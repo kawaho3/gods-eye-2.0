@@ -4557,5 +4557,16 @@
   "Check the bounds and minimum magnitude.": "יש לבדוק את הגבולות ואת המגניטודה המזערית.",
   "Desktop notifications are unavailable or blocked.": "התראות שולחן העבודה אינן זמינות או חסומות.",
   "Monitoring USGS while this tab is open.": "נתוני USGS נבדקים כל עוד הלשונית פתוחה.",
-  "USGS unavailable. Retrying in one minute.": "נתוני USGS אינם זמינים. ניסיון נוסף בעוד דקה."
+  "USGS unavailable. Retrying in one minute.": "נתוני USGS אינם זמינים. ניסיון נוסף בעוד דקה.",
+  "Import local CSV": "ייבוא קובץ CSV מקומי",
+  "Latitude column": "עמודת קו רוחב",
+  "Longitude column": "עמודת קו אורך",
+  "Timestamp column (optional)": "עמודת חותמת זמן (רשות)",
+  "ID column (optional)": "עמודת מזהה (רשות)",
+  "Check the CSV header, size and row limit.": "יש לבדוק את כותרת קובץ ה־CSV, את גודלו ואת מגבלת השורות.",
+  "Choose distinct columns for each field.": "יש לבחור עמודה שונה לכל שדה.",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "שורות תקינות: {valid}. שורות שגויות: {invalid}.",
+  "Rejected records: {rows}": "רשומות שנדחו: {rows}",
+  "Create a new layer": "יצירת שכבה חדשה",
+  "CSV layer updated.": "שכבת ה־CSV עודכנה."
 }

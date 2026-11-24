@@ -4557,5 +4557,16 @@
   "Check the bounds and minimum magnitude.": "Comprueba los límites y la magnitud mínima.",
   "Desktop notifications are unavailable or blocked.": "Las notificaciones de escritorio no están disponibles o están bloqueadas.",
   "Monitoring USGS while this tab is open.": "Se consulta el USGS mientras esta pestaña esté abierta.",
-  "USGS unavailable. Retrying in one minute.": "USGS no disponible. Se volverá a intentar en un minuto."
+  "USGS unavailable. Retrying in one minute.": "USGS no disponible. Se volverá a intentar en un minuto.",
+  "Import local CSV": "Importar CSV local",
+  "Latitude column": "Columna de latitud",
+  "Longitude column": "Columna de longitud",
+  "Timestamp column (optional)": "Columna de fecha y hora (opcional)",
+  "ID column (optional)": "Columna de ID (opcional)",
+  "Check the CSV header, size and row limit.": "Comprueba el encabezado, el tamaño y el límite de filas del CSV.",
+  "Choose distinct columns for each field.": "Elige columnas distintas para cada campo.",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "Filas válidas: {valid}. Filas no válidas: {invalid}.",
+  "Rejected records: {rows}": "Registros rechazados: {rows}",
+  "Create a new layer": "Crear una capa nueva",
+  "CSV layer updated.": "Capa CSV actualizada."
 }

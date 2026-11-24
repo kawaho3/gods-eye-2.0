@@ -4345,5 +4345,16 @@
   "Check the bounds and minimum magnitude.": "範囲と最小マグニチュードを確認してください。",
   "Desktop notifications are unavailable or blocked.": "デスクトップ通知は利用できないか、ブロックされています。",
   "Monitoring USGS while this tab is open.": "このタブを開いている間、USGSの情報を確認します。",
-  "USGS unavailable. Retrying in one minute.": "USGSの情報を取得できません。1分後に再試行します。"
+  "USGS unavailable. Retrying in one minute.": "USGSの情報を取得できません。1分後に再試行します。",
+  "Import local CSV": "ローカル CSV を読み込む",
+  "Latitude column": "緯度の列",
+  "Longitude column": "経度の列",
+  "Timestamp column (optional)": "タイムスタンプの列（任意）",
+  "ID column (optional)": "ID の列（任意）",
+  "Check the CSV header, size and row limit.": "CSV のヘッダー、サイズ、行数の上限を確認してください。",
+  "Choose distinct columns for each field.": "各項目に異なる列を選択してください。",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "有効な行：{valid}。無効な行：{invalid}。",
+  "Rejected records: {rows}": "除外したレコード：{rows}",
+  "Create a new layer": "新しいレイヤーを作成",
+  "CSV layer updated.": "CSV レイヤーを更新しました。"
 }

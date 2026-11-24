@@ -4345,5 +4345,16 @@
   "Check the bounds and minimum magnitude.": "请检查范围和最低震级。",
   "Desktop notifications are unavailable or blocked.": "桌面通知不可用或已被阻止。",
   "Monitoring USGS while this tab is open.": "此标签页打开期间将监测 USGS 数据。",
-  "USGS unavailable. Retrying in one minute.": "USGS 暂时不可用。一分钟后重试。"
+  "USGS unavailable. Retrying in one minute.": "USGS 暂时不可用。一分钟后重试。",
+  "Import local CSV": "导入本地 CSV",
+  "Latitude column": "纬度列",
+  "Longitude column": "经度列",
+  "Timestamp column (optional)": "时间戳列（可选）",
+  "ID column (optional)": "ID 列（可选）",
+  "Check the CSV header, size and row limit.": "请检查 CSV 表头、大小和行数限制。",
+  "Choose distinct columns for each field.": "请为每个字段选择不同的列。",
+  "Valid rows: {valid}. Invalid rows: {invalid}.": "有效行：{valid}。无效行：{invalid}。",
+  "Rejected records: {rows}": "被拒绝的记录：{rows}",
+  "Create a new layer": "新建图层",
+  "CSV layer updated.": "已更新 CSV 图层。"
 }
